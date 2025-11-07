@@ -48,7 +48,7 @@ namespace monitailayout
             else
             {
                 // サイドバーを閉じる
-                AnimateSidebarWidth(60, duration, ease);
+                AnimateSidebarWidth(80, duration, ease);
                 AnimateIcon(true, duration);
                 ShowMenuText(false, duration);
                 isSidebarCollapsed = true;
@@ -81,17 +81,17 @@ namespace monitailayout
             SidebarColumn.BeginAnimation(ColumnDefinition.WidthProperty, animation);
         }
 
-        // メニューアイコンの変形アニメーション（ハンバーガー ↔ ×）
+        // メニューアイコンの変形アニメーション（×↔ ハンバーガー）
         private void AnimateIcon(bool toClose, TimeSpan duration)
         {
-            var hamburgerOpacity = new DoubleAnimation
+            var closeOpacity = new DoubleAnimation
             {
                 To = toClose ? 0 : 1,
                 Duration = duration,
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 
-            var closeOpacity = new DoubleAnimation
+            var hamburgerOpacity = new DoubleAnimation
             {
                 To = toClose ? 1 : 0,
                 Duration = duration,

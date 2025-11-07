@@ -68,12 +68,12 @@
                         <!-- アイコン変形のためのグリッド -->
                         <Grid Width="24" Height="24">
                             <!-- ハンバーガーアイコン（3本線） -->
-                            <Viewbox x:Name="HamburgerIcon" Width="24" Height="24">
-                            <Canvas Width="24" Height="24">
-                                <Rectangle Fill="White" Width="20" Height="2" Canvas.Left="2" Canvas.Top="6"/>
-                                <Rectangle Fill="White" Width="20" Height="2" Canvas.Left="2" Canvas.Top="11"/>
-                                <Rectangle Fill="White" Width="20" Height="2" Canvas.Left="2" Canvas.Top="16"/>
-                            </Canvas>
+                            <Viewbox x:Name="HamburgerIcon" Width="24" Height="24" Opacity="0">
+                                <Canvas Width="24" Height="24">
+                                    <Rectangle Fill="White" Width="20" Height="2" Canvas.Left="2" Canvas.Top="6"/>
+                                    <Rectangle Fill="White" Width="20" Height="2" Canvas.Left="2" Canvas.Top="11"/>
+                                    <Rectangle Fill="White" Width="20" Height="2" Canvas.Left="2" Canvas.Top="16"/>
+                                </Canvas>
                             </Viewbox>
                             <!-- 閉じるアイコン（×） -->
                             <materialDesign:PackIcon x:Name="CloseIcon" 
@@ -81,9 +81,9 @@
                                                     Width="24" 
                                                     Height="24" 
                                                     Foreground="White"
-                                                    Opacity="0"
+                                                    Opacity="1"
                                                     HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"/>
+                                                    VerticalAlignment="Bottom"/>
                         </Grid>
                     </Button>
 
@@ -95,7 +95,7 @@
                                 Click="NavigationButton_Click"
                                 Tag="Home">
                             <Button.ToolTip>
-                              <ToolTip x:Name="HomeButtonToolTip" Content="ホーム"/>
+                                <ToolTip x:Name="HomeButtonToolTip" Content="ホーム"/>
                             </Button.ToolTip>
                             <Grid>
                                 <StackPanel Orientation="Horizontal">
@@ -103,7 +103,7 @@
                                                             Width="20" 
                                                             Height="20" 
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,10,0"/>
+                                                            Margin="10,0,10,0"/>
                                     <TextBlock x:Name="HomeText" 
                                               Text="ホーム" 
                                               VerticalAlignment="Center"/>
@@ -117,7 +117,7 @@
                                 Click="NavigationButton_Click"
                                 Tag="Schedule">
                             <Button.ToolTip>
-                              <ToolTip x:Name="ScheduleButtonToolTip" Content="スケジュール"/>
+                                <ToolTip x:Name="ScheduleButtonToolTip" Content="スケジュール"/>
                             </Button.ToolTip>
                             <Grid>
                                 <StackPanel Orientation="Horizontal">
@@ -125,7 +125,7 @@
                                                             Width="20" 
                                                             Height="20" 
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,10,0"/>
+                                                            Margin="10,0,10,0"/>
                                     <TextBlock x:Name="ScheduleText" 
                                               Text="スケジュール" 
                                               VerticalAlignment="Center"/>
@@ -139,7 +139,7 @@
                                 Click="NavigationButton_Click"
                                 Tag="Report">
                             <Button.ToolTip>
-                              <ToolTip x:Name="ReportButtonToolTip" Content="レポート"/>
+                                <ToolTip x:Name="ReportButtonToolTip" Content="レポート"/>
                             </Button.ToolTip>
                             <Grid>
                                 <StackPanel Orientation="Horizontal">
@@ -147,7 +147,7 @@
                                                             Width="20" 
                                                             Height="20" 
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,10,0"/>
+                                                            Margin="10,0,10,0"/>
                                     <TextBlock x:Name="ReportText" 
                                               Text="レポート" 
                                               VerticalAlignment="Center"/>
@@ -161,7 +161,7 @@
                                 Click="NavigationButton_Click"
                                 Tag="History">
                             <Button.ToolTip>
-                              <ToolTip x:Name="HistoryButtonToolTip" Content="履歴"/>
+                                <ToolTip x:Name="HistoryButtonToolTip" Content="履歴"/>
                             </Button.ToolTip>
                             <Grid>
                                 <StackPanel Orientation="Horizontal">
@@ -169,7 +169,7 @@
                                                             Width="20" 
                                                             Height="20" 
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,10,0"/>
+                                                            Margin="10,0,10,0"/>
                                     <TextBlock x:Name="HistoryText" 
                                               Text="履歴" 
                                               VerticalAlignment="Center"/>
@@ -183,7 +183,7 @@
                                 Click="NavigationButton_Click"
                                 Tag="Settings">
                             <Button.ToolTip>
-                              <ToolTip x:Name="SettingsButtonToolTip" Content="設定"/>
+                                <ToolTip x:Name="SettingsButtonToolTip" Content="設定"/>
                             </Button.ToolTip>
                             <Grid>
                                 <StackPanel Orientation="Horizontal">
@@ -191,7 +191,7 @@
                                                             Width="20" 
                                                             Height="20" 
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,10,0"/>
+                                                            Margin="10,0,10,0"/>
                                     <TextBlock x:Name="SettingsText" 
                                               Text="設定" 
                                               VerticalAlignment="Center"/>
@@ -205,7 +205,7 @@
                                 Click="NavigationButton_Click"
                                 Tag="Help">
                             <Button.ToolTip>
-                              <ToolTip x:Name="HelpButtonToolTip" Content="ヘルプ"/>
+                                <ToolTip x:Name="HelpButtonToolTip" Content="ヘルプ"/>
                             </Button.ToolTip>
                             <Grid>
                                 <StackPanel Orientation="Horizontal">
@@ -213,7 +213,7 @@
                                                             Width="20" 
                                                             Height="20" 
                                                             VerticalAlignment="Center"
-                                                            Margin="0,0,10,0"/>
+                                                            Margin="10,0,10,0"/>
                                     <TextBlock x:Name="HelpText" 
                                               Text="ヘルプ" 
                                               VerticalAlignment="Center"/>
@@ -227,14 +227,14 @@
             <!-- メインコンテンツエリア -->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="85"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="42"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <!-- トップバー -->
                 <materialDesign:ColorZone Grid.Row="0" 
                                          Mode="PrimaryMid"
-                                         materialDesign:ElevationAssist.Elevation="Dp4">
+                                         materialDesign:ElevationAssist.Elevation="Dp4" Height="40">
                     <Grid Background="#3E5771">
                         <TextBlock Text="MonitAI"
                                   FontSize="32"
