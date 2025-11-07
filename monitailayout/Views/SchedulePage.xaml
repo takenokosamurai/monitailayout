@@ -1,0 +1,67 @@
+﻿<Page x:Class="monitailayout.Views.SchedulePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Background="#ECF0F1"
+      Title="スケジュール">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+        <StackPanel>
+            <TextBlock Text="スケジュール"
+                      Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                      Margin="0,0,0,20"/>
+
+            <materialDesign:Card Padding="20">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                        <materialDesign:PackIcon Kind="Calendar" 
+                                                Width="24" 
+                                                Height="24"
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,10,0"/>
+                        <TextBlock Text="今週の予定"
+                                  Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                  VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- カレンダー -->
+                    <Calendar Margin="0,10,0,0"
+                             HorizontalAlignment="Left"/>
+
+                    <!-- 予定リスト -->
+                    <TextBlock Text="予定リスト"
+                              Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                              Margin="0,20,0,10"/>
+
+                    <StackPanel>
+                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
+                               BorderThickness="0,0,0,1"
+                               Padding="10"
+                               Margin="0,5">
+                            <StackPanel>
+                                <TextBlock Text="会議: プロジェクトレビュー"
+                                          FontWeight="Bold"/>
+                                <TextBlock Text="2025-11-07 10:00 - 11:00"
+                                          Opacity="0.7"
+                                          FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
+                               BorderThickness="0,0,0,1"
+                               Padding="10"
+                               Margin="0,5">
+                            <StackPanel>
+                                <TextBlock Text="タスク: レポート作成"
+                                          FontWeight="Bold"/>
+                                <TextBlock Text="2025-11-07 14:00 - 16:00"
+                                          Opacity="0.7"
+                                          FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
