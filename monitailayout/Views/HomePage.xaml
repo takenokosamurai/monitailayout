@@ -386,75 +386,109 @@
 
         <!-- 履歴ダイアログ -->
         <materialDesign:DialogHost.DialogContent>
-            <materialDesign:Card Width="500" Padding="20">
+            <materialDesign:Card Width="520" Padding="24">
                 <StackPanel>
+                    <!-- ヘッダー -->
                     <Grid Margin="0,0,0,20">
                         <TextBlock Text="履歴"
-                          Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                          FontSize="20"
+                          FontWeight="Bold"
                           VerticalAlignment="Center"
-                          HorizontalAlignment="Left"/>
+                          HorizontalAlignment="Left"
+                          Foreground="#212121"/>
                         <Button Style="{StaticResource MaterialDesignIconButton}"
                        HorizontalAlignment="Right"
+                       Width="32"
+                       Height="32"
                        Click="CloseHistoryDialog_Click">
-                            <materialDesign:PackIcon Kind="Close"/>
+                            <materialDesign:PackIcon Kind="Close" Width="20" Height="20"/>
                         </Button>
                     </Grid>
 
-                    <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl x:Name="HistoryListBox">
+                    <!-- 履歴リスト -->
+                    <ScrollViewer MaxHeight="420" 
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl x:Name="HistoryListBox" Margin="0,0,0,10">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button HorizontalContentAlignment="Stretch"
-                       Padding="10,12"
-                       Margin="0,4"
-                       Click="HistoryItem_Click"
-                       Tag="{Binding}"
-                       Background="Transparent"
-                       BorderThickness="0"
-                       MinHeight="70">
-                                        <Border BorderBrush="#E0E0E0" 
-                           BorderThickness="0,0,0,1"
-                           Padding="0,0,0,10">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
+                                    <!-- シンプルなボタン -->
+                                    <Button Click="HistoryItem_Click"
+                                   Tag="{Binding}"
+                                   Height="76"
+                                   HorizontalContentAlignment="Stretch"
+                                   Margin="0,0,0,8"
+                                   Padding="16,12"
+                                   Background="White"
+                                   BorderBrush="#E0E0E0"
+                                   BorderThickness="1"
+                                   Cursor="Hand">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Background="{TemplateBinding Background}"
+                                                           BorderBrush="{TemplateBinding BorderBrush}"
+                                                           BorderThickness="{TemplateBinding BorderThickness}"
+                                                           CornerRadius="4"
+                                                           Padding="{TemplateBinding Padding}">
+                                                                <ContentPresenter VerticalAlignment="Center"/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#F5F5F5"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
 
-                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Goal}" 
-                                          FontWeight="Bold"
-                                          FontSize="14"
-                                          TextWrapping="Wrap"
-                                          Margin="0,0,0,6"
-                                          Foreground="#212121"
-                                          LineHeight="20"/>
-                                                    <TextBlock Text="{Binding TimeDisplay}" 
-                                          FontSize="12"
-                                          Foreground="#757575"
-                                          LineHeight="18"/>
-                                                </StackPanel>
+                                        <!-- ボタンの中身 -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="24"/>
+                                            </Grid.ColumnDefinitions>
 
-                                                <materialDesign:PackIcon Grid.Column="1"
-                                                    Kind="ChevronRight"
-                                                    VerticalAlignment="Center"
-                                                    Margin="10,0,0,0"
-                                                    Foreground="#757575"
-                                                    Width="20"
-                                                    Height="20"/>
-                                            </Grid>
-                                        </Border>
+                                            <!-- テキスト部分 -->
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Goal}" 
+                                                  FontSize="15"
+                                                  FontWeight="SemiBold"
+                                                  Foreground="#212121"
+                                                  TextWrapping="NoWrap"
+                                                  TextTrimming="CharacterEllipsis"
+                                                  Margin="0,0,0,6"/>
+                                                <TextBlock Text="{Binding TimeDisplay}" 
+                                                  FontSize="13"
+                                                  Foreground="#757575"/>
+                                            </StackPanel>
+
+                                            <!-- 矢印アイコン -->
+                                            <materialDesign:PackIcon Grid.Column="1"
+                                                            Kind="ChevronRight"
+                                                            Width="20"
+                                                            Height="20"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalAlignment="Center"
+                                                            Foreground="#9E9E9E"/>
+                                        </Grid>
                                     </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
 
+                    <!-- 履歴なしメッセージ -->
                     <TextBlock x:Name="NoHistoryText"
                       Text="履歴がありません"
+                      FontSize="14"
                       HorizontalAlignment="Center"
-                      Opacity="0.5"
-                      Margin="0,20"
+                      Foreground="#9E9E9E"
+                      Margin="0,40,0,20"
                       Visibility="Collapsed"/>
                 </StackPanel>
             </materialDesign:Card>
