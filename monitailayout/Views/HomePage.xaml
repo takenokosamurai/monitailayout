@@ -5,121 +5,459 @@
       Background="#ECF0F1"
       Title="ホーム">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
-        <StackPanel>
-            <!-- ページタイトル -->
-            <TextBlock Text="ホーム"
-                      Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                      Margin="0,0,0,20"/>
+    <Page.Resources>
+        <!-- Page.Resources 内の TimeInputStyle を以下に置き換え -->
+        <Style x:Key="TimeInputStyle" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="MaxLength" Value="2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0,12,0,12"/>
+            <Setter Property="materialDesign:TextFieldAssist.CharacterCounterVisibility" Value="Hidden"/>
+        </Style>
 
-            <!-- ウェルカムカード -->
-            <materialDesign:Card Padding="20" Margin="0,0,0,20">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <materialDesign:PackIcon Kind="Information" 
-                                                Width="24" 
-                                                Height="24"
-                                                VerticalAlignment="Center"
-                                                Margin="0,0,10,0"/>
-                        <TextBlock Text="ダッシュボード"
+        <!-- ステッパーボタンスタイル -->
+        <Style x:Key="StepperButtonStyle" TargetType="RepeatButton" BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Delay" Value="500"/>
+            <Setter Property="Interval" Value="100"/>
+        </Style>
+    </Page.Resources>
+
+    <!-- DialogHostをルート要素として配置 -->
+    <materialDesign:DialogHost x:Name="HistoryDialogHost" Identifier="HistoryDialog">
+        <materialDesign:DialogHost x:Name="MonthEndDialogHost" Identifier="MonthEndDialog">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
+                <StackPanel MaxWidth="1150" Margin="10">
+                    <!-- 上部：目標入力 + 履歴ボタン -->
+                    <materialDesign:Card Padding="25" Margin="0,0,0,12"
+                                        materialDesign:ElevationAssist.Elevation="Dp4">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- タイトル行 -->
+                            <Grid Grid.Row="0" Margin="0,0,0,12">
+                                <TextBlock Text="目標"
+                                          Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                          Foreground="#00897B"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"/>
+
+                                <!-- 履歴ボタン -->
+                                <Button x:Name="HistoryPopupButton"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        HorizontalAlignment="Right"
+                                        Click="HistoryButton_Click"
+                                        Background="#00897B"
+                                        BorderBrush="#00897B"
+                                        Height="32">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="History" 
+                                                                VerticalAlignment="Center"
+                                                                Width="18"
+                                                                Height="18"
+                                                                Margin="0,0,6,0"/>
+                                        <TextBlock Text="履歴から選択" 
+                                                  VerticalAlignment="Center"
+                                                  FontSize="13"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <!-- 目標入力 -->
+                            <TextBox x:Name="GoalTextBox"
+                                    Grid.Row="1"
+                                    materialDesign:HintAssist.Hint="達成したい目標を入力してください"
+                                    materialDesign:HintAssist.IsFloating="True"
+                                    TextWrapping="Wrap"
+                                    AcceptsReturn="True"
+                                    MinLines="2"
+                                    MaxLines="4"
+                                    FontSize="15"
+                                    VerticalScrollBarVisibility="Auto"/>
+                        </Grid>
+                    </materialDesign:Card>
+
+                    <!-- 中段：時間設定 -->
+                    <materialDesign:Card Padding="25" Margin="0,0,0,12"
+                                        materialDesign:ElevationAssist.Elevation="Dp4">
+                        <StackPanel>
+                            <!-- タイトルとモード切り替えボタン -->
+                            <Grid Margin="0,0,0,15">
+                                <TextBlock Text="時間設定"
+                                          Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                          Foreground="#00897B"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"/>
+
+                                <Button x:Name="SwitchModeButton"
+                                       Style="{StaticResource MaterialDesignFlatButton}"
+                                       HorizontalAlignment="Right"
+                                       Click="SwitchMode_Click"
+                                       Foreground="#FFA726"
+                                       Height="32"
+                                       Padding="8,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="SwapHorizontal" 
+                                                                VerticalAlignment="Center"
+                                                                Width="18"
+                                                                Height="18"
+                                                                Margin="0,0,4,0"/>
+                                        <TextBlock x:Name="SwitchModeText" 
+                                                  Text="終了時刻で入力" 
+                                                  VerticalAlignment="Center"
+                                                  FontSize="13"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <!-- 時間入力エリア with Stepper -->
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 日 with Stepper -->
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <RepeatButton Grid.Row="0"
+                     Style="{StaticResource StepperButtonStyle}"
+                     Click="IncrementDays_Click"
+                     HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronUp" Width="20" Height="20"/>
+                                    </RepeatButton>
+
+                                    <TextBox x:Name="DaysTextBox"
+                Grid.Row="1"
+                Text="00"
+                Style="{StaticResource TimeInputStyle}"
+                PreviewTextInput="NumericTextBox_PreviewTextInput"
+                PreviewKeyDown="TimeInput_PreviewKeyDown"
+                TextChanged="TimeInput_TextChanged"
+                LostFocus="DaysTextBox_LostFocus"
+                GotFocus="TimeInput_GotFocus"
+                Margin="0,4,0,4"
+                Height="56"/>
+
+                                    <RepeatButton Grid.Row="2"
+                     Style="{StaticResource StepperButtonStyle}"
+                     Click="DecrementDays_Click"
+                     HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronDown" Width="20" Height="20"/>
+                                    </RepeatButton>
+                                </Grid>
+
+                                <TextBlock Grid.Column="1" 
+              Text="日" 
+              FontSize="20"
+              VerticalAlignment="Center"
+              Margin="8,0"/>
+
+                                <!-- 時 with Stepper -->
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <RepeatButton Grid.Row="0"
+                     Style="{StaticResource StepperButtonStyle}"
+                     Click="IncrementHours_Click"
+                     HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronUp" Width="20" Height="20"/>
+                                    </RepeatButton>
+
+                                    <TextBox x:Name="HoursTextBox"
+                Grid.Row="1"
+                Text="00"
+                Style="{StaticResource TimeInputStyle}"
+                PreviewTextInput="NumericTextBox_PreviewTextInput"
+                PreviewKeyDown="TimeInput_PreviewKeyDown"
+                TextChanged="TimeInput_TextChanged"
+                LostFocus="HoursTextBox_LostFocus"
+                GotFocus="TimeInput_GotFocus"
+                Margin="0,4,0,4"
+                Height="56"/>
+
+                                    <RepeatButton Grid.Row="2"
+                     Style="{StaticResource StepperButtonStyle}"
+                     Click="DecrementHours_Click"
+                     HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronDown" Width="20" Height="20"/>
+                                    </RepeatButton>
+                                </Grid>
+
+                                <TextBlock Grid.Column="3" 
+              Text="時" 
+              FontSize="20"
+              VerticalAlignment="Center"
+              Margin="8,0"/>
+
+                                <!-- 分 with Stepper -->
+                                <Grid Grid.Column="4">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <RepeatButton Grid.Row="0"
+                     Style="{StaticResource StepperButtonStyle}"
+                     Click="IncrementMinutes_Click"
+                     HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronUp" Width="20" Height="20"/>
+                                    </RepeatButton>
+
+                                    <TextBox x:Name="MinutesTextBox"
+                Grid.Row="1"
+                Text="00"
+                Style="{StaticResource TimeInputStyle}"
+                PreviewTextInput="NumericTextBox_PreviewTextInput"
+                PreviewKeyDown="TimeInput_PreviewKeyDown"
+                TextChanged="TimeInput_TextChanged"
+                LostFocus="MinutesTextBox_LostFocus"
+                GotFocus="TimeInput_GotFocus"
+                Margin="0,4,0,4"
+                Height="56"/>
+
+                                    <RepeatButton Grid.Row="2"
+                     Style="{StaticResource StepperButtonStyle}"
+                     Click="DecrementMinutes_Click"
+                     HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronDown" Width="20" Height="20"/>
+                                    </RepeatButton>
+                                </Grid>
+
+                                <TextBlock x:Name="TimeModeLabel"
+              Grid.Column="5" 
+              Text="やる" 
+              FontSize="20"
+              FontWeight="Bold"
+              Foreground="#00897B"
+              VerticalAlignment="Center"
+              Margin="8,0,0,0"/>
+                            </Grid>
+
+                            <!-- クイック時間追加ボタン（中央揃え） -->
+                            <StackPanel Orientation="Horizontal" 
+                                       HorizontalAlignment="Center">
+                                <Button Content="+30分" 
+                                       Style="{StaticResource MaterialDesignOutlinedButton}"
+                                       Margin="4"
+                                       Click="QuickAdd_Click"
+                                       Tag="30"
+                                       BorderBrush="#00897B"
+                                       Foreground="#00897B"
+                                       Height="36"
+                                       Padding="16,0"
+                                       FontSize="13"/>
+                                <Button Content="+1時間" 
+                                       Style="{StaticResource MaterialDesignOutlinedButton}"
+                                       Margin="4"
+                                       Click="QuickAdd_Click"
+                                       Tag="60"
+                                       BorderBrush="#00897B"
+                                       Foreground="#00897B"
+                                       Height="36"
+                                       Padding="16,0"
+                                       FontSize="13"/>
+                                <Button Content="+2時間" 
+                                       Style="{StaticResource MaterialDesignOutlinedButton}"
+                                       Margin="4"
+                                       Click="QuickAdd_Click"
+                                       Tag="120"
+                                       BorderBrush="#00897B"
+                                       Foreground="#00897B"
+                                       Height="36"
+                                       Padding="16,0"
+                                       FontSize="13"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- 下部：計算結果 + スタートボタン -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="280"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 完了予定時刻/期間表示 -->
+                        <materialDesign:Card Grid.Column="0"
+                                            Padding="20"
+                                            materialDesign:ElevationAssist.Elevation="Dp4"
+                                            Background="#E0F2F1">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="ResultLabel"
+                                          Text="完了予定時刻"
+                                          FontSize="14"
+                                          Foreground="#00695C"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,8"/>
+                                <TextBlock x:Name="CalculatedTimeText"
+                                          Text="2025年11月11日 03時33分"
+                                          FontSize="22"
+                                          FontWeight="Bold"
+                                          Foreground="#00897B"
+                                          HorizontalAlignment="Center"
+                                          TextWrapping="Wrap"
+                                          TextAlignment="Center"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <!-- スタートボタン -->
+                        <Button x:Name="StartButton"
+                               Grid.Column="2"
+                               Content="スタート"
+                               Style="{StaticResource MaterialDesignRaisedButton}"
+                               Height="100"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Background="#FFA726"
+                               BorderBrush="#FFA726"
+                               Click="StartButton_Click">
+                            <Button.Effect>
+                                <DropShadowEffect Color="#FFA726" 
+                                                 Opacity="0.5" 
+                                                 BlurRadius="20" 
+                                                 ShadowDepth="0"/>
+                            </Button.Effect>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 月末超過ポップアップ -->
+            <materialDesign:DialogHost.DialogContent>
+                <materialDesign:Card Width="400" Padding="30">
+                    <StackPanel>
+                        <materialDesign:PackIcon Kind="CalendarAlert" 
+                                                Width="48" 
+                                                Height="48"
+                                                Foreground="#FFA726"
+                                                HorizontalAlignment="Center"
+                                                Margin="0,0,0,20"/>
+
+                        <TextBlock Text="当月の範囲を超えています"
                                   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                  VerticalAlignment="Center"/>
+                                  HorizontalAlignment="Center"
+                                  Margin="0,0,0,10"/>
+
+                        <TextBlock Text="長期の予定はスケジュール設定をご利用ください"
+                                  TextWrapping="Wrap"
+                                  TextAlignment="Center"
+                                  Opacity="0.7"
+                                  Margin="0,0,0,20"/>
+
+                        <StackPanel Orientation="Horizontal" 
+                                   HorizontalAlignment="Center">
+                            <Button Content="閉じる"
+                                   Style="{StaticResource MaterialDesignFlatButton}"
+                                   Margin="5"
+                                   Click="CloseMonthEndDialog_Click"/>
+                            <Button Content="スケジュール設定へ"
+                                   Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Margin="5"
+                                   Background="#00897B"
+                                   Click="GoToSchedule_Click"/>
+                        </StackPanel>
                     </StackPanel>
-                    <TextBlock Text="MonitAI へようこそ。左側のメニューから機能を選択してください。"
-                              TextWrapping="Wrap"
-                              Opacity="0.7"/>
+                </materialDesign:Card>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+        <!-- 履歴ダイアログ -->
+        <materialDesign:DialogHost.DialogContent>
+            <materialDesign:Card Width="500" Padding="20">
+                <StackPanel>
+                    <Grid Margin="0,0,0,20">
+                        <TextBlock Text="履歴"
+                          Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"/>
+                        <Button Style="{StaticResource MaterialDesignIconButton}"
+                       HorizontalAlignment="Right"
+                       Click="CloseHistoryDialog_Click">
+                            <materialDesign:PackIcon Kind="Close"/>
+                        </Button>
+                    </Grid>
+
+                    <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="HistoryListBox">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button HorizontalContentAlignment="Stretch"
+                       Padding="10,12"
+                       Margin="0,4"
+                       Click="HistoryItem_Click"
+                       Tag="{Binding}"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       MinHeight="70">
+                                        <Border BorderBrush="#E0E0E0" 
+                           BorderThickness="0,0,0,1"
+                           Padding="0,0,0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Goal}" 
+                                          FontWeight="Bold"
+                                          FontSize="14"
+                                          TextWrapping="Wrap"
+                                          Margin="0,0,0,6"
+                                          Foreground="#212121"
+                                          LineHeight="20"/>
+                                                    <TextBlock Text="{Binding TimeDisplay}" 
+                                          FontSize="12"
+                                          Foreground="#757575"
+                                          LineHeight="18"/>
+                                                </StackPanel>
+
+                                                <materialDesign:PackIcon Grid.Column="1"
+                                                    Kind="ChevronRight"
+                                                    VerticalAlignment="Center"
+                                                    Margin="10,0,0,0"
+                                                    Foreground="#757575"
+                                                    Width="20"
+                                                    Height="20"/>
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <TextBlock x:Name="NoHistoryText"
+                      Text="履歴がありません"
+                      HorizontalAlignment="Center"
+                      Opacity="0.5"
+                      Margin="0,20"
+                      Visibility="Collapsed"/>
                 </StackPanel>
             </materialDesign:Card>
-
-            <!-- 統計カード -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <materialDesign:Card Grid.Column="0" Padding="20" Margin="0,0,10,0">
-                    <StackPanel>
-                        <materialDesign:PackIcon Kind="ChartLine" 
-                                                Width="40" 
-                                                Height="40"
-                                                HorizontalAlignment="Center"
-                                                Foreground="#3498DB"
-                                                Margin="0,0,0,10"/>
-                        <TextBlock Text="アクティブタスク"
-                                  Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                  HorizontalAlignment="Center"
-                                  Opacity="0.7"/>
-                        <TextBlock Text="12"
-                                  Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                                  HorizontalAlignment="Center"
-                                  Foreground="#3498DB"
-                                  Margin="0,5,0,0"/>
-                    </StackPanel>
-                </materialDesign:Card>
-
-                <materialDesign:Card Grid.Column="1" Padding="20" Margin="5,0,5,0">
-                    <StackPanel>
-                        <materialDesign:PackIcon Kind="CheckCircle" 
-                                                Width="40" 
-                                                Height="40"
-                                                HorizontalAlignment="Center"
-                                                Foreground="#2ECC71"
-                                                Margin="0,0,0,10"/>
-                        <TextBlock Text="完了タスク"
-                                  Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                  HorizontalAlignment="Center"
-                                  Opacity="0.7"/>
-                        <TextBlock Text="48"
-                                  Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                                  HorizontalAlignment="Center"
-                                  Foreground="#2ECC71"
-                                  Margin="0,5,0,0"/>
-                    </StackPanel>
-                </materialDesign:Card>
-
-                <materialDesign:Card Grid.Column="2" Padding="20" Margin="10,0,0,0">
-                    <StackPanel>
-                        <materialDesign:PackIcon Kind="Alert" 
-                                                Width="40" 
-                                                Height="40"
-                                                HorizontalAlignment="Center"
-                                                Foreground="#E74C3C"
-                                                Margin="0,0,0,10"/>
-                        <TextBlock Text="注意が必要"
-                                  Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                  HorizontalAlignment="Center"
-                                  Opacity="0.7"/>
-                        <TextBlock Text="3"
-                                  Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                                  HorizontalAlignment="Center"
-                                  Foreground="#E74C3C"
-                                  Margin="0,5,0,0"/>
-                    </StackPanel>
-                </materialDesign:Card>
-            </Grid>
-
-            <!-- アクションボタン -->
-            <StackPanel Orientation="Horizontal" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,30,0,0">
-                <Button Content="新規作成"
-                       Style="{StaticResource MaterialDesignRaisedButton}"
-                       Margin="5"
-                       Click="NewTask_Click"/>
-
-                <Button Content="更新"
-                       Style="{StaticResource MaterialDesignRaisedButton}"
-                       Background="{DynamicResource SecondaryHueMidBrush}"
-                       Margin="5"
-                       Click="Refresh_Click"/>
-
-                <Button Content="エクスポート"
-                       Style="{StaticResource MaterialDesignOutlinedButton}"
-                       Margin="5"
-                       Click="Export_Click"/>
-            </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
+        </materialDesign:DialogHost.DialogContent>
+    </materialDesign:DialogHost>
 </Page>

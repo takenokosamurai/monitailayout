@@ -6,10 +6,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Material Design のテーマカラー設定 -->
+                <!-- Material Design のテーマカラー設定 - Teal & Amber -->
                 <materialDesign:BundledTheme BaseTheme="Light" 
-                                            PrimaryColor="DeepPurple" 
-                                            SecondaryColor="Lime" />
+                                            PrimaryColor="Teal" 
+                                            SecondaryColor="Amber" />
                 <!-- Material Design の基本スタイル（必須） -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
