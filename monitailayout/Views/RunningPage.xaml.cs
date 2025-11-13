@@ -8,10 +8,9 @@ namespace monitailayout.Views
     public partial class RunningPage : Page
     {
         private string goal;
+        private DateTime startTime;
         private DateTime endTime;
         private DispatcherTimer timer;
-        private bool isPaused = false;
-        private TimeSpan pausedRemaining;
 
         // レベルシステム (表示用のサンプル)
         private int level = 5;
@@ -22,10 +21,12 @@ namespace monitailayout.Views
             InitializeComponent();
 
             this.goal = goal;
-            this.endTime = DateTime.Now.AddDays(days).AddHours(hours).AddMinutes(minutes);
+            this.startTime = DateTime.Now;
+            this.endTime = startTime.AddDays(days).AddHours(hours).AddMinutes(minutes);
 
             GoalText.Text = goal;
-            LevelText.Text = $"Level {level} - レベルUPまで {lcount}回";
+            LevelText.Text = $"Level {level}";
+            LevelProgressText.Text = $"レベルUPまで {lcount}回";
 
             // タイマー開始
             timer = new DispatcherTimer();
@@ -36,35 +37,24 @@ namespace monitailayout.Views
             UpdateRemainingTime();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object? sender, EventArgs e)
         {
-            if (!isPaused)
-            {
-                UpdateRemainingTime();
-            }
+            UpdateRemainingTime();
         }
 
         private void UpdateRemainingTime()
         {
-            TimeSpan remaining;
-
-            if (isPaused)
-            {
-                remaining = pausedRemaining;
-            }
-            else
-            {
-                remaining = endTime - DateTime.Now;
-            }
+            TimeSpan remaining = endTime - DateTime.Now;
 
             if (remaining.TotalSeconds <= 0)
             {
                 timer.Stop();
                 MessageBox.Show("お疲れ様でした!目標を達成しました!", "MonitAI", MessageBoxButton.OK, MessageBoxImage.Information);
-                NavigationService.GoBack();
+                NavigationService?.GoBack();
                 return;
             }
 
+            // 残り時間の計算
             int days = (int)remaining.TotalDays;
             int hours = remaining.Hours;
             int minutes = remaining.Minutes;
@@ -78,38 +68,6 @@ namespace monitailayout.Views
             else
             {
                 RemainingTimeText.Text = $"{hours:00}:{minutes:00}:{seconds:00}";
-            }
-
-            // 詳細表示
-            RemainingDetailText.Text = $"{days}日 {hours}時間 {minutes}分 {seconds}秒";
-        }
-
-        private void PauseButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (isPaused)
-            {
-                // 再開
-                isPaused = false;
-                endTime = DateTime.Now.Add(pausedRemaining);
-                PauseButton.Content = "一時停止";
-            }
-            else
-            {
-                // 一時停止
-                isPaused = true;
-                pausedRemaining = endTime - DateTime.Now;
-                PauseButton.Content = "再開";
-            }
-        }
-
-        private void StopButton_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("本当に中止しますか?", "MonitAI", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                timer.Stop();
-                NavigationService.GoBack();
             }
         }
     }

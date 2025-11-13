@@ -254,41 +254,6 @@
               VerticalAlignment="Center"
               Margin="8,0,0,0"/>
                             </Grid>
-
-                            <!-- クイック時間追加ボタン（中央揃え） -->
-                            <StackPanel Orientation="Horizontal" 
-                                       HorizontalAlignment="Center">
-                                <Button Content="+30分" 
-                                       Style="{StaticResource MaterialDesignOutlinedButton}"
-                                       Margin="4"
-                                       Click="QuickAdd_Click"
-                                       Tag="30"
-                                       BorderBrush="#00897B"
-                                       Foreground="#00897B"
-                                       Height="36"
-                                       Padding="16,0"
-                                       FontSize="13"/>
-                                <Button Content="+1時間" 
-                                       Style="{StaticResource MaterialDesignOutlinedButton}"
-                                       Margin="4"
-                                       Click="QuickAdd_Click"
-                                       Tag="60"
-                                       BorderBrush="#00897B"
-                                       Foreground="#00897B"
-                                       Height="36"
-                                       Padding="16,0"
-                                       FontSize="13"/>
-                                <Button Content="+2時間" 
-                                       Style="{StaticResource MaterialDesignOutlinedButton}"
-                                       Margin="4"
-                                       Click="QuickAdd_Click"
-                                       Tag="120"
-                                       BorderBrush="#00897B"
-                                       Foreground="#00897B"
-                                       Height="36"
-                                       Padding="16,0"
-                                       FontSize="13"/>
-                            </StackPanel>
                         </StackPanel>
                     </materialDesign:Card>
 
