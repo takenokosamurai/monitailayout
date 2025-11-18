@@ -6,21 +6,21 @@
       Title="ホーム">
 
     <Page.Resources>
-        <!-- Page.Resources 内の TimeInputStyle を以下に置き換え -->
+        <!-- TimeInputStyle -->
         <Style x:Key="TimeInputStyle" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
-            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="MaxLength" Value="2"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="0,12,0,12"/>
+            <Setter Property="Padding" Value="0,14,0,14"/>
             <Setter Property="materialDesign:TextFieldAssist.CharacterCounterVisibility" Value="Hidden"/>
         </Style>
 
         <!-- ステッパーボタンスタイル -->
         <Style x:Key="StepperButtonStyle" TargetType="RepeatButton" BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="32"/>
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="36"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Delay" Value="500"/>
             <Setter Property="Interval" Value="100"/>
@@ -31,9 +31,9 @@
     <materialDesign:DialogHost x:Name="HistoryDialogHost" Identifier="HistoryDialog">
         <materialDesign:DialogHost x:Name="MonthEndDialogHost" Identifier="MonthEndDialog">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
-                <StackPanel MaxWidth="1150" Margin="10">
+                <StackPanel MaxWidth="1200" Margin="10">
                     <!-- 上部：目標入力 + 履歴ボタン -->
-                    <materialDesign:Card Padding="25" Margin="0,0,0,12"
+                    <materialDesign:Card Padding="30, 20" Margin="0,0,0,15"
                                         materialDesign:ElevationAssist.Elevation="Dp4">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -42,9 +42,10 @@
                             </Grid.RowDefinitions>
 
                             <!-- タイトル行 -->
-                            <Grid Grid.Row="0" Margin="0,0,0,12">
+                            <Grid Grid.Row="0" Margin="0,0,0,15">
                                 <TextBlock Text="目標"
-                                          Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                          FontSize="20"
+                                          FontWeight="Bold"
                                           Foreground="#00897B"
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Left"/>
@@ -56,16 +57,17 @@
                                         Click="HistoryButton_Click"
                                         Background="#00897B"
                                         BorderBrush="#00897B"
-                                        Height="32">
+                                        Height="36"
+                                        Padding="12,0">
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="History" 
                                                                 VerticalAlignment="Center"
                                                                 Width="18"
                                                                 Height="18"
-                                                                Margin="0,0,6,0"/>
+                                                                Margin="0,0,8,0"/>
                                         <TextBlock Text="履歴から選択" 
                                                   VerticalAlignment="Center"
-                                                  FontSize="13"/>
+                                                  FontSize="14"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -79,19 +81,20 @@
                                     AcceptsReturn="True"
                                     MinLines="2"
                                     MaxLines="4"
-                                    FontSize="15"
+                                    FontSize="17"
                                     VerticalScrollBarVisibility="Auto"/>
                         </Grid>
                     </materialDesign:Card>
 
                     <!-- 中段：時間設定 -->
-                    <materialDesign:Card Padding="25" Margin="0,0,0,12"
+                    <materialDesign:Card Padding="30, 10, 30, 0" Margin="0,0,0,15"
                                         materialDesign:ElevationAssist.Elevation="Dp4">
                         <StackPanel>
                             <!-- タイトルとモード切り替えボタン -->
-                            <Grid Margin="0,0,0,15">
+                            <Grid Margin="0,0,0,20">
                                 <TextBlock Text="時間設定"
-                                          Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                          FontSize="20"
+                                          FontWeight="Bold"
                                           Foreground="#00897B"
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Left"/>
@@ -101,18 +104,18 @@
                                        HorizontalAlignment="Right"
                                        Click="SwitchMode_Click"
                                        Foreground="#FFA726"
-                                       Height="32"
-                                       Padding="8,0">
+                                       Height="36"
+                                       Padding="10,0">
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="SwapHorizontal" 
                                                                 VerticalAlignment="Center"
                                                                 Width="18"
                                                                 Height="18"
-                                                                Margin="0,0,4,0"/>
+                                                                Margin="0,0,6,0"/>
                                         <TextBlock x:Name="SwitchModeText" 
                                                   Text="終了時刻で入力" 
                                                   VerticalAlignment="Center"
-                                                  FontSize="13"/>
+                                                  FontSize="14"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -137,37 +140,38 @@
                                     </Grid.RowDefinitions>
 
                                     <RepeatButton Grid.Row="0"
-                     Style="{StaticResource StepperButtonStyle}"
-                     Click="IncrementDays_Click"
-                     HorizontalAlignment="Center">
-                                        <materialDesign:PackIcon Kind="ChevronUp" Width="20" Height="20"/>
+                                                 Style="{StaticResource StepperButtonStyle}"
+                                                 Click="IncrementDays_Click"
+                                                 HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronUp" Width="22" Height="22"/>
                                     </RepeatButton>
 
                                     <TextBox x:Name="DaysTextBox"
-                Grid.Row="1"
-                Text="00"
-                Style="{StaticResource TimeInputStyle}"
-                PreviewTextInput="NumericTextBox_PreviewTextInput"
-                PreviewKeyDown="TimeInput_PreviewKeyDown"
-                TextChanged="TimeInput_TextChanged"
-                LostFocus="DaysTextBox_LostFocus"
-                GotFocus="TimeInput_GotFocus"
-                Margin="0,4,0,4"
-                Height="56"/>
+                                            Grid.Row="1"
+                                            Text="00"
+                                            Style="{StaticResource TimeInputStyle}"
+                                            PreviewTextInput="NumericTextBox_PreviewTextInput"
+                                            PreviewKeyDown="TimeInput_PreviewKeyDown"
+                                            TextChanged="TimeInput_TextChanged"
+                                            LostFocus="DaysTextBox_LostFocus"
+                                            GotFocus="TimeInput_GotFocus"
+                                            Margin="0,6,0,6"
+                                            Height="64"/>
 
                                     <RepeatButton Grid.Row="2"
-                     Style="{StaticResource StepperButtonStyle}"
-                     Click="DecrementDays_Click"
-                     HorizontalAlignment="Center">
-                                        <materialDesign:PackIcon Kind="ChevronDown" Width="20" Height="20"/>
+                                                 Style="{StaticResource StepperButtonStyle}"
+                                                 Click="DecrementDays_Click"
+                                                 HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronDown" Width="22" Height="22"/>
                                     </RepeatButton>
                                 </Grid>
 
                                 <TextBlock Grid.Column="1" 
-              Text="日" 
-              FontSize="20"
-              VerticalAlignment="Center"
-              Margin="8,0"/>
+                                          Text="日" 
+                                          FontSize="24"
+                                          FontWeight="Bold"
+                                          VerticalAlignment="Center"
+                                          Margin="10,0"/>
 
                                 <!-- 時 with Stepper -->
                                 <Grid Grid.Column="2">
@@ -178,37 +182,38 @@
                                     </Grid.RowDefinitions>
 
                                     <RepeatButton Grid.Row="0"
-                     Style="{StaticResource StepperButtonStyle}"
-                     Click="IncrementHours_Click"
-                     HorizontalAlignment="Center">
-                                        <materialDesign:PackIcon Kind="ChevronUp" Width="20" Height="20"/>
+                                                 Style="{StaticResource StepperButtonStyle}"
+                                                 Click="IncrementHours_Click"
+                                                 HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronUp" Width="22" Height="22"/>
                                     </RepeatButton>
 
                                     <TextBox x:Name="HoursTextBox"
-                Grid.Row="1"
-                Text="00"
-                Style="{StaticResource TimeInputStyle}"
-                PreviewTextInput="NumericTextBox_PreviewTextInput"
-                PreviewKeyDown="TimeInput_PreviewKeyDown"
-                TextChanged="TimeInput_TextChanged"
-                LostFocus="HoursTextBox_LostFocus"
-                GotFocus="TimeInput_GotFocus"
-                Margin="0,4,0,4"
-                Height="56"/>
+                                            Grid.Row="1"
+                                            Text="00"
+                                            Style="{StaticResource TimeInputStyle}"
+                                            PreviewTextInput="NumericTextBox_PreviewTextInput"
+                                            PreviewKeyDown="TimeInput_PreviewKeyDown"
+                                            TextChanged="TimeInput_TextChanged"
+                                            LostFocus="HoursTextBox_LostFocus"
+                                            GotFocus="TimeInput_GotFocus"
+                                            Margin="0,6,0,6"
+                                            Height="64"/>
 
                                     <RepeatButton Grid.Row="2"
-                     Style="{StaticResource StepperButtonStyle}"
-                     Click="DecrementHours_Click"
-                     HorizontalAlignment="Center">
-                                        <materialDesign:PackIcon Kind="ChevronDown" Width="20" Height="20"/>
+                                                 Style="{StaticResource StepperButtonStyle}"
+                                                 Click="DecrementHours_Click"
+                                                 HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronDown" Width="22" Height="22"/>
                                     </RepeatButton>
                                 </Grid>
 
                                 <TextBlock Grid.Column="3" 
-              Text="時" 
-              FontSize="20"
-              VerticalAlignment="Center"
-              Margin="8,0"/>
+                                          Text="時" 
+                                          FontSize="24"
+                                          FontWeight="Bold"
+                                          VerticalAlignment="Center"
+                                          Margin="10,0"/>
 
                                 <!-- 分 with Stepper -->
                                 <Grid Grid.Column="4">
@@ -219,40 +224,40 @@
                                     </Grid.RowDefinitions>
 
                                     <RepeatButton Grid.Row="0"
-                     Style="{StaticResource StepperButtonStyle}"
-                     Click="IncrementMinutes_Click"
-                     HorizontalAlignment="Center">
-                                        <materialDesign:PackIcon Kind="ChevronUp" Width="20" Height="20"/>
+                                                 Style="{StaticResource StepperButtonStyle}"
+                                                 Click="IncrementMinutes_Click"
+                                                 HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronUp" Width="22" Height="22"/>
                                     </RepeatButton>
 
                                     <TextBox x:Name="MinutesTextBox"
-                Grid.Row="1"
-                Text="00"
-                Style="{StaticResource TimeInputStyle}"
-                PreviewTextInput="NumericTextBox_PreviewTextInput"
-                PreviewKeyDown="TimeInput_PreviewKeyDown"
-                TextChanged="TimeInput_TextChanged"
-                LostFocus="MinutesTextBox_LostFocus"
-                GotFocus="TimeInput_GotFocus"
-                Margin="0,4,0,4"
-                Height="56"/>
+                                            Grid.Row="1"
+                                            Text="00"
+                                            Style="{StaticResource TimeInputStyle}"
+                                            PreviewTextInput="NumericTextBox_PreviewTextInput"
+                                            PreviewKeyDown="TimeInput_PreviewKeyDown"
+                                            TextChanged="TimeInput_TextChanged"
+                                            LostFocus="MinutesTextBox_LostFocus"
+                                            GotFocus="TimeInput_GotFocus"
+                                            Margin="0,6,0,6"
+                                            Height="64"/>
 
                                     <RepeatButton Grid.Row="2"
-                     Style="{StaticResource StepperButtonStyle}"
-                     Click="DecrementMinutes_Click"
-                     HorizontalAlignment="Center">
-                                        <materialDesign:PackIcon Kind="ChevronDown" Width="20" Height="20"/>
+                                                 Style="{StaticResource StepperButtonStyle}"
+                                                 Click="DecrementMinutes_Click"
+                                                 HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChevronDown" Width="22" Height="22"/>
                                     </RepeatButton>
                                 </Grid>
 
                                 <TextBlock x:Name="TimeModeLabel"
-              Grid.Column="5" 
-              Text="やる" 
-              FontSize="20"
-              FontWeight="Bold"
-              Foreground="#00897B"
-              VerticalAlignment="Center"
-              Margin="8,0,0,0"/>
+                                          Grid.Column="5" 
+                                          Text="やる" 
+                                          FontSize="24"
+                                          FontWeight="Bold"
+                                          Foreground="#00897B"
+                                          VerticalAlignment="Center"
+                                          Margin="10,0,0,0"/>
                             </Grid>
                         </StackPanel>
                     </materialDesign:Card>
@@ -262,18 +267,19 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="15"/>
-                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="300"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- 完了予定時刻/期間表示 -->
                         <materialDesign:Card Grid.Column="0"
-                                            Padding="20"
+                                            Padding="20,18"
                                             materialDesign:ElevationAssist.Elevation="Dp4"
                                             Background="#E0F2F1">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock x:Name="ResultLabel"
                                           Text="完了予定時刻"
-                                          FontSize="14"
+                                          FontSize="15"
+                                          FontWeight="Medium"
                                           Foreground="#00695C"
                                           HorizontalAlignment="Center"
                                           Margin="0,0,0,8"/>
@@ -293,8 +299,8 @@
                                Grid.Column="2"
                                Content="スタート"
                                Style="{StaticResource MaterialDesignRaisedButton}"
-                               Height="100"
-                               FontSize="22"
+                               Height="110"
+                               FontSize="26"
                                FontWeight="Bold"
                                Background="#FFA726"
                                BorderBrush="#FFA726"
@@ -356,48 +362,48 @@
                     <!-- ヘッダー -->
                     <Grid Margin="0,0,0,20">
                         <TextBlock Text="履歴"
-                          FontSize="20"
-                          FontWeight="Bold"
-                          VerticalAlignment="Center"
-                          HorizontalAlignment="Left"
-                          Foreground="#212121"/>
+                                  FontSize="20"
+                                  FontWeight="Bold"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Foreground="#212121"/>
                         <Button Style="{StaticResource MaterialDesignIconButton}"
-                       HorizontalAlignment="Right"
-                       Width="32"
-                       Height="32"
-                       Click="CloseHistoryDialog_Click">
+                               HorizontalAlignment="Right"
+                               Width="32"
+                               Height="32"
+                               Click="CloseHistoryDialog_Click">
                             <materialDesign:PackIcon Kind="Close" Width="20" Height="20"/>
                         </Button>
                     </Grid>
 
                     <!-- 履歴リスト -->
                     <ScrollViewer MaxHeight="420" 
-                         VerticalScrollBarVisibility="Auto"
-                         HorizontalScrollBarVisibility="Disabled">
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl x:Name="HistoryListBox" Margin="0,0,0,10">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <!-- シンプルなボタン -->
                                     <Button Click="HistoryItem_Click"
-                                   Tag="{Binding}"
-                                   Height="76"
-                                   HorizontalContentAlignment="Stretch"
-                                   Margin="0,0,0,8"
-                                   Padding="16,12"
-                                   Background="White"
-                                   BorderBrush="#E0E0E0"
-                                   BorderThickness="1"
-                                   Cursor="Hand">
+                                           Tag="{Binding}"
+                                           Height="76"
+                                           HorizontalContentAlignment="Stretch"
+                                           Margin="0,0,0,8"
+                                           Padding="16,12"
+                                           Background="White"
+                                           BorderBrush="#E0E0E0"
+                                           BorderThickness="1"
+                                           Cursor="Hand">
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="Button">
                                                             <Border Background="{TemplateBinding Background}"
-                                                           BorderBrush="{TemplateBinding BorderBrush}"
-                                                           BorderThickness="{TemplateBinding BorderThickness}"
-                                                           CornerRadius="4"
-                                                           Padding="{TemplateBinding Padding}">
+                                                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                                                   CornerRadius="4"
+                                                                   Padding="{TemplateBinding Padding}">
                                                                 <ContentPresenter VerticalAlignment="Center"/>
                                                             </Border>
                                                         </ControlTemplate>
@@ -421,25 +427,25 @@
                                             <!-- テキスト部分 -->
                                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Goal}" 
-                                                  FontSize="15"
-                                                  FontWeight="SemiBold"
-                                                  Foreground="#212121"
-                                                  TextWrapping="NoWrap"
-                                                  TextTrimming="CharacterEllipsis"
-                                                  Margin="0,0,0,6"/>
+                                                          FontSize="15"
+                                                          FontWeight="SemiBold"
+                                                          Foreground="#212121"
+                                                          TextWrapping="NoWrap"
+                                                          TextTrimming="CharacterEllipsis"
+                                                          Margin="0,0,0,6"/>
                                                 <TextBlock Text="{Binding TimeDisplay}" 
-                                                  FontSize="13"
-                                                  Foreground="#757575"/>
+                                                          FontSize="13"
+                                                          Foreground="#757575"/>
                                             </StackPanel>
 
                                             <!-- 矢印アイコン -->
                                             <materialDesign:PackIcon Grid.Column="1"
-                                                            Kind="ChevronRight"
-                                                            Width="20"
-                                                            Height="20"
-                                                            VerticalAlignment="Center"
-                                                            HorizontalAlignment="Center"
-                                                            Foreground="#9E9E9E"/>
+                                                                    Kind="ChevronRight"
+                                                                    Width="20"
+                                                                    Height="20"
+                                                                    VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Center"
+                                                                    Foreground="#9E9E9E"/>
                                         </Grid>
                                     </Button>
                                 </DataTemplate>
@@ -449,12 +455,12 @@
 
                     <!-- 履歴なしメッセージ -->
                     <TextBlock x:Name="NoHistoryText"
-                      Text="履歴がありません"
-                      FontSize="14"
-                      HorizontalAlignment="Center"
-                      Foreground="#9E9E9E"
-                      Margin="0,40,0,20"
-                      Visibility="Collapsed"/>
+                              Text="履歴がありません"
+                              FontSize="14"
+                              HorizontalAlignment="Center"
+                              Foreground="#9E9E9E"
+                              Margin="0,40,0,20"
+                              Visibility="Collapsed"/>
                 </StackPanel>
             </materialDesign:Card>
         </materialDesign:DialogHost.DialogContent>
